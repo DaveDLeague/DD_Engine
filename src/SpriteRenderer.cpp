@@ -13,7 +13,6 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::drawSprite(Texture2D texture, glm::vec2 position, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
-    // Prepare transformations
     this->shader.use();
 
     glm::mat4 model;
@@ -38,11 +37,9 @@ void SpriteRenderer::drawSprite(Texture2D texture, glm::vec2 position, glm::vec2
 
 void SpriteRenderer::initRenderData()
 {
-    // Configure VAO/VBO
     GLuint VBO;
 
 	GLfloat vertices[] = {
-		//verts     //tex coords
 		0.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 1.0f, 1.0f, 1.0f, 
@@ -61,11 +58,9 @@ void SpriteRenderer::initRenderData()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	
-	//position coords
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-	//tex coords
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 

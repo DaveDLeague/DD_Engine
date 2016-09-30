@@ -1,26 +1,22 @@
-#include <time.h>
-
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
 #include "Game.h"
 #include "ResourceManager.h"
 
+const int SCREEN_WIDTH = 900; 
+const int SCREEN_HEIGHT = 700;
 
 void handleInput(SDL_Event *event);
 
-const GLuint SCREEN_WIDTH = 800;
-const GLuint SCREEN_HEIGHT = 600;
-
-Game breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 bool quit = false;
 
+Game game3d(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 int main(){
-	
 	SDL_Init(SDL_INIT_VIDEO);
 
-	SDL_Window* window = SDL_CreateWindow("Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	SDL_Window* window = SDL_CreateWindow("DD_ENGINE", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext context = SDL_GL_CreateContext(window);   
 
 	if(context == NULL){
@@ -31,17 +27,12 @@ int main(){
     glewInit();
 	glGetError();
 
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	game3d.init();
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
-
-	breakout.init();
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);	
 
 	GLfloat deltaTime = 0.0f;
     GLfloat lastFrame = 0.0f;
-
-	breakout.currentState = GAME_RUNNING;
 
 	SDL_Event event;
 	while(!quit){
@@ -65,14 +56,14 @@ int main(){
 			}
         }
 
-		breakout.processInput(deltaTime);
-		breakout.update(deltaTime);
-
-		glClearColor(0.3f, 0.3f, 0.8f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        breakout.render();
 
-		SDL_GL_SwapWindow(window);	
+		game3d.processInput(deltaTime);				
+		game3d.update(deltaTime);
+		game3d.render();
+
+		SDL_GL_SwapWindow(window);
     }
 	
 	SDL_Quit();
