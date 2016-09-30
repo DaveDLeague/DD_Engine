@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "SDL2/SDL.h"
 
 class Camera{
 public:
@@ -19,5 +20,9 @@ public:
 	~Camera();
 
 	void update(float deltaTime);
+	inline void setWindowID(int id){ windowID = id; win = SDL_GetWindowFromID(windowID);}
 private:
+	int windowID;
+
+	SDL_Window* win;
 };

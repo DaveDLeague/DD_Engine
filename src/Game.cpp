@@ -7,7 +7,6 @@ const float CAMERA_SPEED = 1.0f;
 Renderer3D* renderer;
 
 Model tri;
-Camera camera;
 
 Game::Game(GLuint width, GLuint height) 
 	: currentState(GAME_RUNNING), keys(), width(width), height(height){ 

@@ -28,6 +28,7 @@ int main(){
 	glGetError();
 
 	game3d.init();
+	game3d.setWindowID(SDL_GetWindowID(window));
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);	
 

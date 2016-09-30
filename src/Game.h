@@ -3,6 +3,8 @@
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
+#include "Camera.h"
+
 enum GameState{
 	GAME_RUNNING,
 	GAME_MENU,
@@ -26,5 +28,10 @@ public:
 	void processInput(GLfloat dt);
 	void update(GLfloat dt);
 	void render();
+	inline void setWindowID(int id){ windowID = id; camera.setWindowID(id); }
+
+private:
+	int windowID;
+	Camera camera;
 };
 
