@@ -1,10 +1,12 @@
 #include "Game.h"
 #include "ResourceManager.h"
 #include "Renderer3D.h"
+#include "SpriteRenderer.h"
 
 const float CAMERA_SPEED = 1.0f;
 
 Renderer3D* renderer;
+SpriteRenderer* spriteRenderer;
 
 Model tri;
 
@@ -15,6 +17,7 @@ Game::Game(GLuint width, GLuint height)
 
 Game::~Game(){
 	delete renderer;
+	delete spriteRenderer;
 }
 
 void Game::init(){
@@ -22,7 +25,15 @@ void Game::init(){
 
 	ResourceManager::loadShader("shaders/shader3d.vs", "shaders/shader3d.fs", NULL, "shader3D"); 
 	renderer = new Renderer3D(ResourceManager::getShader("shader3D"));
+
+	ResourceManager::loadShader("shaders/vertex.vs", "shaders/fragment.fs", NULL, "sprite");
+	spriteRenderer = new SpriteRenderer(ResourceManager::getShader("sprite"));
 	
+	ResourceManager::loadTexture("textures/block.png", false, "block");
+	ResourceManager::getShader("sprite").use();
+	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(this->width), static_cast<GLfloat>(this->height), 0.0f, -1.0f, 1.0f);
+	ResourceManager::getShader("sprite").setMatrix4("projection", proj);
+
 	GLfloat vertices[] = {
 		0.0f, 0.0f, 0.0f,
         0.5f, 1.0f, 0.0f,
@@ -46,7 +57,7 @@ void Game::init(){
 	tri.position = glm::vec3(0.0f, 0.0f, -3.0f);
 	tri.scale = glm::vec3(1.0, 1.0f, 1.0f);
 	
-	renderer->setProjection(glm::perspective(glm::radians(45.0f), 900.0f / 700.0f, 0.1f, 1000.0f));
+	renderer->setProjection(glm::perspective(glm::radians(45.0f), static_cast<float>(this->width / this->height), 0.1f, 1000.0f));
 }
 float f = 0.0f;
 void Game::update(GLfloat dt){
@@ -90,4 +101,6 @@ void Game::processInput(GLfloat dt){
 
 void Game::render(){
 	renderer->drawModel(tri, camera);
+	spriteRenderer->drawSprite(ResourceManager::getTexture("block"), 
+            glm::vec2(0, 0), glm::vec2(200.0f, 150.0f), 0.0f);
 }
