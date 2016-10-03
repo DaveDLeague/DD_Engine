@@ -2,11 +2,17 @@
 #include "ResourceManager.h"
 #include "Renderer3D.h"
 #include "SpriteRenderer.h"
+#include "TextRenderer.h"
+
+#include <sstream>
 
 const float CAMERA_SPEED = 1.0f;
 
+std::stringstream ss;
+
 Renderer3D* renderer;
 SpriteRenderer* spriteRenderer;
+TextRenderer* textRenderer;
 
 Model tri;
 
@@ -18,6 +24,7 @@ Game::Game(GLuint width, GLuint height)
 Game::~Game(){
 	delete renderer;
 	delete spriteRenderer;
+	delete textRenderer;
 }
 
 void Game::init(){
@@ -29,6 +36,10 @@ void Game::init(){
 	ResourceManager::loadShader("shaders/vertex.vs", "shaders/fragment.fs", NULL, "sprite");
 	spriteRenderer = new SpriteRenderer(ResourceManager::getShader("sprite"));
 	
+	ResourceManager::loadShader("shaders/text_vertex.vs", "shaders/text_fragment.fs", NULL, "text");
+	textRenderer = new TextRenderer(ResourceManager::getShader("text"));
+	textRenderer->setDimensions(width, height);	
+
 	ResourceManager::loadTexture("textures/block.png", false, "block");
 	ResourceManager::getShader("sprite").use();
 	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(this->width), static_cast<GLfloat>(this->height), 0.0f, -1.0f, 1.0f);
@@ -101,6 +112,11 @@ void Game::processInput(GLfloat dt){
 
 void Game::render(){
 	renderer->drawModel(tri, camera);
-	spriteRenderer->drawSprite(ResourceManager::getTexture("block"), 
-            glm::vec2(0, 0), glm::vec2(200.0f, 150.0f), 0.0f);
+	spriteRenderer->drawSprite(ResourceManager::getTexture("block"), glm::vec2(0, 0), glm::vec2(200.0f, 150.0f), 0.0f);
+	ss << "camera x:" << camera.position.x << " y:" << camera.position.y << " z:" << camera.position.z;
+	textRenderer->renderText(ss.str(), 1.0f, 600.0f, 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	ss.str("");
+	ss << "camera pitch:" << camera.pitch << " roll:" << camera.roll << " yaw:" << camera.yaw;
+	textRenderer->renderText(ss.str(), 1.0f, 550.0f, 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	ss.str("");
 }

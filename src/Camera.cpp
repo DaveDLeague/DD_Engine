@@ -14,7 +14,7 @@ Camera::Camera(){
 	this->right = glm::vec3(1.0f, 0.0f, 0.0f);
 	this->globalUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	this->yaw = -90.0f;
+	this->yaw = -80.0f;
 	this->pitch = 0.0f;
 	this->roll = 0.0f;
 }
@@ -25,7 +25,7 @@ Camera::~Camera(){
 
 void clamp(float &v, float l, float h){
 	if(v > h){ v = h; }
-	else if(v < 0){ v = 0; }
+	else if(v < l){ v = l; }
 }
 
 void Camera::update(float deltaTime){
